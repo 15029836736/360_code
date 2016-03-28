@@ -1,0 +1,31 @@
+本工具包括三个脚本，10_server.py,10_client.py,10_input.py.
+10_server.py和10_input.py构成了服务端
+10_client.py构成了客户端
+
+10_server.py:
+首先将10_server.py打入后台，相当于运行了该服务，服务接受TCP请求，接受客户端发来的变量名，无限查找shelve数据库，返回给客户端对应的值，没有则告知不存在。
+
+10_input.py：
+输入变量名=值，将其保存到shelve数据库(可以看成字典)，q表示退出，严格按照格式key=value，周围有空格也无所谓。比如 wr = "wr" 和wr="wr"效果一样。
+
+10_client.py：
+输入变量名，去服务端查找，存在则返回对应的值，不存在则说不存在。q表示退出。
+
+10_de.py：
+会帮助你查看到shelve数据库的内容
+
+做法
+搭建服务端
+1.
+./10_server.py
+
+2.
+./10_input.py
+
+搭建客户端
+1.
+./10_client.py
+
+
+注意：为了便于测试，10_server.py 10_client.py的host（server）都是我的私有IP，如果你将客户端发送到其他主机上，则需要将10_server.py的server和10_client.py的host改为你的server端的IP。
+

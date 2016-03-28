@@ -1,0 +1,80 @@
+确保你的python版本为2.7+，确保有模块argparse.
+如果你是2.6版本没有模块argparse.
+1. wget https://bootstrap.pypa.io/ez_setup.py --no-check-certificate -O - | python
+2. easy_install argparse
+
+无论你是普户或者是超户，都可以使用该工具。该工具在centos6.5，redhat6.5和redhat7上测试有效。
+本人新手用python编写，肯定会有bug，还请大神帮忙指出更改。
+
+我们举个例子：
+我是普通用户。
+
+crontab -l
+* * * * * ls ~/job1
+* * * * * du -sh ~/job2
+
+1.查看某个job：
+./3_cron_ctrl.py --list job1
+* * * * * ls ~/job1
+
+
+2.关闭某个job：
+./3_cron_ctrl.py --stop job1
+         stop job1 successful
+此时再次查看：
+./3_cron_ctrl.py --list job1
+#* * * * * ls ~/job1
+crontab -l
+#* * * * * ls ~/job1
+* * * * * du -sh ~/job2
+
+
+3.开启某个job：
+./3_cron_ctrl.py --start job1
+         start job1 successful
+此时再次查看：
+./3_cron_ctrl.py --list job1
+* * * * * ls ~/job1
+crontab -l
+* * * * * ls ~/job1
+* * * * * du -sh ~/job2
+
+
+
+4.如果你输入不存在的job：
+./3_cron_ctrl.py --stop 123
+         crontab not has this job,please make sure jobname right
+
+
+5.输入不存在的参数：
+./3_cron_ctrl.py --ll
+usage: cron_ctrl.py [-h] [--start START] [--stop STOP] [--list LIST]
+cron_ctrl.py: error: unrecognized arguments: --ll
+
+
+6.或者你将--参数和参数值输入反了：
+./3_cron_ctrl.py job1 --stop
+usage: cron_ctrl.py [-h] [--start START] [--stop STOP] [--list LIST]
+cron_ctrl.py: error: argument --stop: expected 1 argument(s)
+
+
+7.或者你直接运行工具
+./3_cron_ctrl.py 
+		pleas input ./demo3.py -h to get help
+
+
+8.或者获取帮助
+./3_cron_ctrl.py -h
+usage: cron_ctrl.py [-h] [--start START] [--stop STOP] [--list LIST]
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --start START  start your job,demo: ./demo3.py --start job1
+  --stop STOP    stop your job,demo: ./demo3.py --stop job1
+  --list LIST    list your job,demo: ./demo3.py --list job1
+
+
+9.源码注释已经说明，参数值job名字不要带/，会对sed有影响，已经屏蔽。
+./3_cron_ctrl.py --start /job1
+ argument must not have /
+

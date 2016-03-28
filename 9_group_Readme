@@ -1,0 +1,112 @@
+本人新手用python编写，肯定会有bug，还请大神帮忙指出更改。
+两个类，一个节点类Node,一个树形结构存取类Tree.
+
+#######################################################
+
+结果：
+./9_group.py 
+    1.adding node
+add(node1,node2) successful
+add(node1,node4) successful
+add(node1,node6) successful
+add(node4,node3) successful
+add(node4,node5) successful
+add(node3,node7) successful
+add(node3,node8) successful
+
+    2.get leaf ,demo node is root(node1):
+[(2, '2'), (7, '7'), (8, '8'), (5, '5'), (6, '6')]
+
+    3.the Tree's schema :
+-1
+ -2
+ -4
+  -3
+   -7
+   -8
+  -5
+ -6
+
+########################################################
+
+节点类：
+class Node():
+    uniq_num=0 #set a static value  everyleaf's number 
+    def __init__(self,data=None):
+        self.data=data
+        self.child=[]
+        self.father=None
+        Node.uniq_num+=1
+        self.uniq_num=Node.uniq_num
+    def __str__(self):
+        return self.uniq_num
+一个静态变量uniq_num，负责节点的编号，确保节点编号唯一。
+类实例变量包括数据，子节点（列表存储），父节点。
+
+树形结构类：
+class Tree():
+    def __init__(self):
+        self.all_leaf=[]
+        self.depth=0
+    def add(self,ftree,ctree):#add node
+        if ctree.father==None:
+            ftree.child.append(ctree)
+            ctree.father=ftree
+        else:
+            print("error[1]:this child has father")
+    def get(self,tree):# get leaf node
+        length=len(tree.child) #set chlid number
+        if length==0: # when is a leaf node
+            info=(tree.uniq_num,tree.data)
+            self.all_leaf.append(info)
+        else:
+            for i in range(length): # Recursive
+                self.get(tree.child[i])
+        return self.all_leaf
+    def leaf_clear(self):# clear all_leaf
+        self.all_leaf=[]
+    def find_depth(self,tree):#find this child tree's depth
+        if tree.father!=None:
+            self.depth+=1
+            self.find_depth(tree.father)
+        
+    def printf(self,tree):#print schema of this child tree
+        self.depth_clear()
+        flag=" "
+        self.find_depth(tree)
+        print("%s-%d" % (flag*self.depth,tree.uniq_num))
+        length=len(tree.child) #set chlid number
+        for i in range(length): # Recursive
+            self.printf(tree.child[i])
+    def depth_clear(self):# clear depth
+        self.depth=0
+
+实例变量包括指定子树所处的深度，和给定子树下所有的叶子节点
+
+类函数add(k,v)：
+k为父节点，v为子节点。将子节点变成该父节点的一个子树。
+
+类函数get(tree)：
+获得该子树下所有的叶子节点，返回一个所有叶子节点的编号以及数据的列表
+
+类函数leaf_clear():
+清除类的all_leaf变量的内容，每次调用get()后必须调用，不然下次调用get()会出错。
+
+类函数find_depth(tree):
+获取指定子树所处的深度，为打印出该树的结构做准备。
+
+类函数depth_clear():
+清除self.depth的值，每次调用printf()后必须调用。
+
+类函数printf(tree):
+遍历树，将该树的结构打印出来，
+-1
+ -2
+ -4
+  -3
+   -7
+   -8
+  -5
+ -6
+比如该树，1是根节点，2，4，6是1的孩子，3是4的孩子，7，8是3的孩子。类似二叉树的先序遍历。
+
